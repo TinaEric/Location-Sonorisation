@@ -1,0 +1,92 @@
+@import "tailwindcss";
+
+/* daisyUI : on n'embarque aucun thème prédéfini, seulement le thème "console" ci-dessous */
+@plugin "daisyui" {
+  themes: false;
+}
+
+/*
+  Palette "console" :
+  - base      : gris aluminium (page, panneaux)
+  - neutral   : encre bleu-ardoise (barre de menu, flight cases, pied de page)
+  - primary   : cobalt (actions)
+  - accent    : jaune gaffer (étiquettes, icônes sur fond sombre)
+*/
+@plugin "daisyui/theme" {
+  name: "console";
+  default: true;
+  prefersdark: false;
+  color-scheme: light;
+
+  --color-base-100: #f4f5f7;
+  --color-base-200: #e9ecf0;
+  --color-base-300: #d3d8df;
+  --color-base-content: #14202e;
+
+  --color-primary: #2a44e8;
+  --color-primary-content: #ffffff;
+  --color-secondary: #5b6b7d;
+  --color-secondary-content: #ffffff;
+  --color-accent: #ffd23f;
+  --color-accent-content: #14202e;
+  --color-neutral: #14202e;
+  --color-neutral-content: #e9ecf0;
+
+  --color-info: #2a7fff;
+  --color-info-content: #ffffff;
+  --color-success: #17835a;
+  --color-success-content: #ffffff;
+  --color-warning: #f2a100;
+  --color-warning-content: #14202e;
+  --color-error: #c8302a;
+  --color-error-content: #ffffff;
+
+  --radius-selector: 0.25rem;
+  --radius-field: 0.25rem;
+  --radius-box: 0.25rem;
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 1px;
+  --depth: 0;
+  --noise: 0;
+}
+
+@theme {
+  --font-sans: "Archivo Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Archivo Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-marker: "Permanent Marker", "Comic Sans MS", cursive;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+}
+
+@layer components {
+  /* Titres : Archivo en largeur étendue, comme le lettrage des flight cases */
+  .display {
+    font-family: var(--font-display);
+    font-stretch: 125%;
+    font-weight: 800;
+    letter-spacing: -0.015em;
+    line-height: 1.05;
+  }
+
+  /* Étiquette de gaffer écrite au marqueur */
+  .tape {
+    display: inline-block;
+    padding: 0.2rem 0.7rem;
+    font-family: var(--font-marker);
+    font-size: 0.9rem;
+    line-height: 1.2;
+    background: var(--color-accent);
+    color: var(--color-accent-content);
+    clip-path: polygon(1.5% 0, 100% 6%, 98.5% 100%, 0 94%);
+  }
+}

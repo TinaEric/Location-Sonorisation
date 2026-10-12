@@ -1,0 +1,1330 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guide complet d'apprentissage NestJS</title>
+<style>
+  :root {
+    --primary: #e0234e;
+    --primary-dark: #b81b3f;
+    --secondary: #2d3748;
+    --bg: #f7fafc;
+    --card: #ffffff;
+    --text: #1a202c;
+    --text-light: #4a5568;
+    --border: #e2e8f0;
+    --code-bg: #1e293b;
+    --code-text: #e2e8f0;
+    --success: #38a169;
+    --warning: #d69e2e;
+    --info: #3182ce;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    font-size: 16px;
+  }
+
+  header {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: white;
+    padding: 60px 20px;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(224, 35, 78, 0.3);
+  }
+
+  header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+  }
+
+  header p {
+    font-size: 1.15rem;
+    opacity: 0.95;
+    max-width: 700px;
+    margin: 0 auto;
+  }
+
+  .badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.2);
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    margin-top: 20px;
+    font-weight: 600;
+  }
+
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 40px 20px;
+  }
+
+  /* Sommaire */
+  .toc {
+    background: var(--card);
+    border-radius: 12px;
+    padding: 30px;
+    margin-bottom: 40px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    border-left: 5px solid var(--primary);
+  }
+
+  .toc h2 {
+    color: var(--primary);
+    margin-bottom: 20px;
+    font-size: 1.5rem;
+  }
+
+  .toc ol {
+    list-style: none;
+    counter-reset: phase;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 12px;
+  }
+
+  .toc li {
+    counter-increment: phase;
+  }
+
+  .toc a {
+    color: var(--secondary);
+    text-decoration: none;
+    display: block;
+    padding: 12px 16px;
+    border-radius: 8px;
+    background: #edf2f7;
+    transition: all 0.2s;
+    font-weight: 500;
+  }
+
+  .toc a::before {
+    content: "Phase " counter(phase) " → ";
+    color: var(--primary);
+    font-weight: 700;
+  }
+
+  .toc a:hover {
+    background: var(--primary);
+    color: white;
+    transform: translateX(5px);
+  }
+
+  .toc a:hover::before { color: white; }
+
+  /* Phases */
+  .phase {
+    background: var(--card);
+    border-radius: 12px;
+    padding: 35px;
+    margin-bottom: 30px;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.06);
+    border-top: 5px solid var(--primary);
+  }
+
+  .phase h2 {
+    color: var(--primary);
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .phase .duration {
+    display: inline-block;
+    background: #fff5f7;
+    color: var(--primary);
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+  }
+
+  .phase h3 {
+    color: var(--secondary);
+    font-size: 1.25rem;
+    margin-top: 28px;
+    margin-bottom: 14px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--border);
+  }
+
+  .phase h4 {
+    color: var(--text);
+    font-size: 1.05rem;
+    margin-top: 18px;
+    margin-bottom: 10px;
+  }
+
+  ul, ol {
+    padding-left: 25px;
+    margin-bottom: 15px;
+  }
+
+  li { margin-bottom: 8px; color: var(--text-light); }
+
+  li strong { color: var(--text); }
+
+  /* Code */
+  code {
+    background: #edf2f7;
+    color: var(--primary-dark);
+    padding: 2px 7px;
+    border-radius: 4px;
+    font-family: 'Fira Code', 'Courier New', monospace;
+    font-size: 0.9em;
+  }
+
+  pre {
+    background: var(--code-bg);
+    color: var(--code-text);
+    padding: 20px;
+    border-radius: 8px;
+    overflow-x: auto;
+    margin: 15px 0;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    position: relative;
+  }
+
+  pre code {
+    background: none;
+    color: inherit;
+    padding: 0;
+    font-size: 0.9rem;
+  }
+
+  pre::before {
+    content: attr(data-lang);
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    font-size: 0.7rem;
+    color: #94a3b8;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 1px;
+  }
+
+  /* Callouts */
+  .callout {
+    padding: 15px 20px;
+    border-radius: 8px;
+    margin: 20px 0;
+    border-left: 4px solid;
+  }
+
+  .callout-info {
+    background: #ebf8ff;
+    border-color: var(--info);
+    color: #2c5282;
+  }
+
+  .callout-warning {
+    background: #fffaf0;
+    border-color: var(--warning);
+    color: #7b341e;
+  }
+
+  .callout-success {
+    background: #f0fff4;
+    border-color: var(--success);
+    color: #22543d;
+  }
+
+  .callout strong { font-weight: 700; }
+
+  /* Tables */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 1px 5px rgba(0,0,0,0.05);
+  }
+
+  th, td {
+    padding: 14px 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+
+  th {
+    background: var(--secondary);
+    color: white;
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: #f7fafc; }
+
+  /* Checkbox list */
+  .checklist {
+    list-style: none;
+    padding: 0;
+  }
+
+  .checklist li {
+    padding: 10px 15px 10px 45px;
+    position: relative;
+    background: #f7fafc;
+    border-radius: 6px;
+    margin-bottom: 8px;
+    border-left: 3px solid var(--primary);
+  }
+
+  .checklist li::before {
+    content: "☐";
+    position: absolute;
+    left: 15px;
+    font-size: 1.2rem;
+    color: var(--primary);
+  }
+
+  /* Objectifs */
+  .objectives {
+    background: #f0fff4;
+    border-radius: 8px;
+    padding: 20px 25px;
+    margin: 20px 0;
+    border-left: 4px solid var(--success);
+  }
+
+  .objectives h4 {
+    color: #22543d;
+    margin-top: 0;
+    margin-bottom: 12px;
+  }
+
+  .objectives ul { margin-bottom: 0; }
+
+  /* Footer */
+  footer {
+    background: var(--secondary);
+    color: #cbd5e0;
+    text-align: center;
+    padding: 40px 20px;
+    margin-top: 60px;
+  }
+
+  footer p { margin-bottom: 10px; }
+
+  footer a {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 600;
+  }
+
+  footer a:hover { text-decoration: underline; }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    header h1 { font-size: 1.8rem; }
+    .phase { padding: 25px 20px; }
+    .phase h2 { font-size: 1.4rem; }
+    .toc ol { grid-template-columns: 1fr; }
+  }
+
+  /* Print */
+  @media print {
+    body { background: white; }
+    .phase { box-shadow: none; border: 1px solid #ccc; page-break-inside: avoid; }
+    header { background: var(--primary); -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🦅 Guide complet d'apprentissage NestJS</h1>
+  <p>Du débutant au développeur expert : un parcours structuré en 5 phases pour maîtriser le framework Node.js le plus populaire de l'entreprise.</p>
+  <span class="badge">📅 Durée estimée : 6 mois à raison de 10h/semaine</span>
+</header>
+
+<div class="container">
+
+  <!-- SOMMAIRE -->
+  <nav class="toc">
+    <h2>📋 Sommaire</h2>
+    <ol>
+      <li><a href="#phase1">Prérequis essentiels</a></li>
+      <li><a href="#phase2">Fondamentaux de NestJS</a></li>
+      <li><a href="#phase3">Niveau intermédiaire</a></li>
+      <li><a href="#phase4">Niveau avancé</a></li>
+      <li><a href="#phase5">Production & bonnes pratiques</a></li>
+      <li><a href="#projets">Projets pratiques</a></li>
+      <li><a href="#ressources">Ressources & conseils</a></li>
+    </ol>
+  </nav>
+
+  <!-- ================= PHASE 1 ================= -->
+  <section class="phase" id="phase1">
+    <h2>📚 Phase 1 — Prérequis essentiels</h2>
+    <span class="duration">⏱️ Durée : 1 à 2 semaines</span>
+
+    <div class="objectives">
+      <h4>🎯 Objectifs de la phase</h4>
+      <ul>
+        <li>Maîtriser TypeScript avant de toucher à NestJS</li>
+        <li>Comprendre l'écosystème Node.js et npm</li>
+        <li>Réviser les bases HTTP/REST et des bases de données</li>
+      </ul>
+    </div>
+
+    <p>NestJS repose fortement sur <strong>TypeScript</strong> et les <strong>décorateurs</strong>. Sauter cette étape est la première cause d'échec chez les débutants.</p>
+
+    <h3>1.1 TypeScript</h3>
+    <ul>
+      <li><strong>Types de base</strong> : <code>string</code>, <code>number</code>, <code>boolean</code>, <code>any</code>, <code>unknown</code>, <code>never</code></li>
+      <li><strong>Interfaces et types</strong> : différences, quand utiliser l'un ou l'autre</li>
+      <li><strong>Classes</strong> : propriétés, méthodes, constructeurs, modificateurs (<code>public</code>, <code>private</code>, <code>protected</code>, <code>readonly</code>)</li>
+      <li><strong>Génériques</strong> : <code>&lt;T&gt;</code>, contraintes, utilitaires (<code>Partial</code>, <code>Pick</code>, <code>Omit</code>)</li>
+      <li><strong>Décorateurs</strong> : <code>@Component</code>, décorateurs de classe, méthode, propriété, paramètre ⚠️ <em>indispensable pour NestJS</em></li>
+      <li><strong>Async/Await</strong> et Promises</li>
+      <li><strong>Modules ES</strong> : <code>import</code> / <code>export</code></li>
+    </ul>
+
+<pre data-lang="typescript"><code>// Exemple de décorateur personnalisé
+function Log(target: any, key: string, descriptor: PropertyDescriptor) {
+  const original = descriptor.value;
+  descriptor.value = function (...args: any[]) {
+    console.log(`Appel de ${key} avec`, args);
+    return original.apply(this, args);
+  };
+}
+
+class Service {
+  @Log
+  saluer(nom: string) {
+    return `Bonjour ${nom}`;
+  }
+}</code></pre>
+
+    <h3>1.2 Node.js & npm</h3>
+    <ul>
+      <li>Installation de Node.js (LTS) et npm/yarn/pnpm</li>
+      <li><code>package.json</code>, scripts, dépendances vs devDependencies</li>
+      <li>Event loop, callbacks, Promises</li>
+      <li>Modules natifs : <code>fs</code>, <code>path</code>, <code>http</code></li>
+      <li>Variables d'environnement (<code>process.env</code>)</li>
+    </ul>
+
+    <h3>1.3 HTTP & REST</h3>
+    <ul>
+      <li>Verbes HTTP : GET, POST, PUT, PATCH, DELETE</li>
+      <li>Codes de statut : 200, 201, 400, 401, 403, 404, 500</li>
+      <li>Headers, body, query params, path params</li>
+      <li>Bonnes pratiques REST (ressources, idempotence)</li>
+    </ul>
+
+    <h3>1.4 Bases de données</h3>
+    <ul>
+      <li><strong>SQL</strong> : PostgreSQL ou MySQL — SELECT, JOIN, INDEX</li>
+      <li><strong>NoSQL</strong> : MongoDB — documents, collections</li>
+      <li>Concepts : migrations, ORM/ODM, relations</li>
+    </ul>
+
+    <div class="callout callout-info">
+      <strong>💡 Conseil :</strong> Si tu es déjà à l'aise avec TypeScript et Node.js, passe directement à la Phase 2. Sinon, consacre au moins une semaine à ces bases.
+    </div>
+
+    <h3>✅ Checklist de fin de phase</h3>
+    <ul class="checklist">
+      <li>Je sais écrire une classe TypeScript avec des décorateurs</li>
+      <li>Je comprends les génériques et les types utilitaires</li>
+      <li>Je sais créer un projet npm et gérer ses dépendances</li>
+      <li>Je connais les verbes HTTP et les codes de statut</li>
+      <li>J'ai déjà écrit une requête SQL avec une jointure</li>
+    </ul>
+  </section>
+
+  <!-- ================= PHASE 2 ================= -->
+  <section class="phase" id="phase2">
+    <h2>🏗️ Phase 2 — Fondamentaux de NestJS</h2>
+    <span class="duration">⏱️ Durée : 2 à 3 semaines</span>
+
+    <div class="objectives">
+      <h4>🎯 Objectifs de la phase</h4>
+      <ul>
+        <li>Comprendre l'architecture modulaire de NestJS</li>
+        <li>Maîtriser Modules, Controllers, Providers et la DI</li>
+        <li>Créer une première API CRUD fonctionnelle</li>
+      </ul>
+    </div>
+
+    <h3>2.1 Introduction à NestJS</h3>
+    <ul>
+      <li>Qu'est-ce que NestJS ? Pourquoi l'utiliser ?</li>
+      <li>Architecture inspirée d'Angular (modules, DI, décorateurs)</li>
+      <li>Comparaison avec Express, Fastify, Koa</li>
+      <li>Installation : <code>npm i -g @nestjs/cli</code></li>
+      <li>Création d'un projet : <code>nest new mon-projet</code></li>
+    </ul>
+
+<pre data-lang="bash"><code># Installation du CLI
+npm install -g @nestjs/cli
+
+# Création d'un nouveau projet
+nest new mon-api
+
+# Générer un module + controller + service
+nest g resource users</code></pre>
+
+    <h3>2.2 Structure d'un projet NestJS</h3>
+<pre data-lang="text"><code>src/
+├── app.controller.ts      # Contrôleur racine
+├── app.service.ts         # Service racine
+├── app.module.ts          # Module racine
+├── main.ts                # Point d'entrée (bootstrap)
+└── users/
+    ├── users.controller.ts
+    ├── users.service.ts
+    ├── users.module.ts
+    └── dto/
+        ├── create-user.dto.ts
+        └── update-user.dto.ts</code></pre>
+
+    <h3>2.3 Modules</h3>
+    <p>Un module est une classe annotée avec <code>@Module()</code> qui regroupe des composants liés.</p>
+
+<pre data-lang="typescript"><code>import { Module } from '@nestjs/common';
+import { UsersController } from './users.controller';
+import { UsersService } from './users.service';
+
+@Module({
+  controllers: [UsersController],
+  providers: [UsersService],
+  exports: [UsersService], // rend le service disponible ailleurs
+})
+export class UsersModule {}</code></pre>
+
+    <h3>2.4 Controllers</h3>
+    <p>Les contrôleurs gèrent les requêtes HTTP entrantes et retournent des réponses.</p>
+
+<pre data-lang="typescript"><code>import { Controller, Get, Post, Body, Param, Delete } from '@nestjs/common';
+
+@Controller('users')
+export class UsersController {
+  constructor(private readonly usersService: UsersService) {}
+
+  @Get()
+  findAll() {
+    return this.usersService.findAll();
+  }
+
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.usersService.findOne(+id);
+  }
+
+  @Post()
+  create(@Body() createUserDto: CreateUserDto) {
+    return this.usersService.create(createUserDto);
+  }
+
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.usersService.remove(+id);
+  }
+}</code></pre>
+
+    <h3>2.5 Providers & Injection de dépendances</h3>
+    <p>Un provider est une classe annotée <code>@Injectable()</code> qui peut être injectée dans d'autres classes via le constructeur.</p>
+
+<pre data-lang="typescript"><code>import { Injectable } from '@nestjs/common';
+
+@Injectable()
+export class UsersService {
+  private users = [];
+
+  findAll() { return this.users; }
+
+  findOne(id: number) {
+    return this.users.find(u => u.id === id);
+  }
+
+  create(dto: CreateUserDto) {
+    const user = { id: Date.now(), ...dto };
+    this.users.push(user);
+    return user;
+  }
+
+  remove(id: number) {
+    this.users = this.users.filter(u => u.id !== id);
+  }
+}</code></pre>
+
+    <h4>Providers personnalisés</h4>
+<pre data-lang="typescript"><code>@Module({
+  providers: [
+    {
+      provide: 'CONFIG',
+      useValue: { apiKey: 'secret' },
+    },
+    {
+      provide: 'DATABASE',
+      useFactory: () => new DatabaseConnection(),
+    },
+  ],
+})
+export class AppModule {}</code></pre>
+
+    <h3>2.6 Middleware & Pipes</h3>
+    <ul>
+      <li><strong>Middleware</strong> : fonctions exécutées avant les handlers</li>
+      <li><strong>Pipes</strong> : transformation et validation des données</li>
+      <li><code>ValidationPipe</code> avec <code>class-validator</code></li>
+    </ul>
+
+<pre data-lang="typescript"><code>// Activer la validation globale dans main.ts
+import { ValidationPipe } from '@nestjs/common';
+
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
+  app.useGlobalPipes(new ValidationPipe({
+    whitelist: true,
+    forbidNonWhitelisted: true,
+    transform: true,
+  }));
+  await app.listen(3000);
+}</code></pre>
+
+    <h3>2.7 Exercice pratique</h3>
+    <div class="callout callout-success">
+      <strong>🎯 Projet :</strong> Créer une API CRUD "Todo" en mémoire (sans base de données) avec :<br>
+      • Module <code>TodosModule</code><br>
+      • Controller avec les 5 routes REST<br>
+      • Service avec la logique métier<br>
+      • DTOs avec validation <code>class-validator</code>
+    </div>
+
+    <h3>✅ Checklist de fin de phase</h3>
+    <ul class="checklist">
+      <li>Je sais générer un module avec le CLI</li>
+      <li>Je comprends la différence entre Controller, Service et Module</li>
+      <li>Je maîtrise l'injection de dépendances par constructeur</li>
+      <li>Je sais valider des données avec un DTO et ValidationPipe</li>
+      <li>J'ai construit une API CRUD fonctionnelle</li>
+    </ul>
+  </section>
+
+  <!-- ================= PHASE 3 ================= -->
+  <section class="phase" id="phase3">
+    <h2>⚙️ Phase 3 — Niveau intermédiaire</h2>
+    <span class="duration">⏱️ Durée : 3 à 4 semaines</span>
+
+    <div class="objectives">
+      <h4>🎯 Objectifs de la phase</h4>
+      <ul>
+        <li>Connecter NestJS à une base de données</li>
+        <li>Implémenter une authentification JWT complète</li>
+        <li>Maîtriser Guards, Interceptors et Exception Filters</li>
+      </ul>
+    </div>
+
+    <h3>3.1 Bases de données : TypeORM ou Prisma</h3>
+    <p><strong>Recommandation 2025 :</strong> Prisma pour les nouveaux projets (DX moderne), TypeORM si tu travailles sur une base existante.</p>
+
+    <h4>Avec TypeORM</h4>
+<pre data-lang="bash"><code>npm install @nestjs/typeorm typeorm pg
+npm install @nestjs/config</code></pre>
+
+<pre data-lang="typescript"><code>// app.module.ts
+@Module({
+  imports: [
+    TypeOrmModule.forRoot({
+      type: 'postgres',
+      host: 'localhost',
+      port: 5432,
+      username: 'postgres',
+      password: 'password',
+      database: 'mydb',
+      autoLoadEntities: true,
+      synchronize: true, // ⚠️ jamais en prod
+    }),
+    UsersModule,
+  ],
+})
+export class AppModule {}</code></pre>
+
+<pre data-lang="typescript"><code>// user.entity.ts
+@Entity()
+export class User {
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Column({ unique: true })
+  email: string;
+
+  @Column()
+  password: string;
+
+  @CreateDateColumn()
+  createdAt: Date;
+}</code></pre>
+
+    <h3>3.2 DTO & validation avancée</h3>
+<pre data-lang="typescript"><code>import { IsEmail, IsString, MinLength } from 'class-validator';
+
+export class CreateUserDto {
+  @IsEmail()
+  email: string;
+
+  @IsString()
+  @MinLength(8)
+  password: string;
+
+  @IsString()
+  name: string;
+}</code></pre>
+
+    <h3>3.3 Guards, Interceptors, Exception Filters</h3>
+
+    <h4>Guards — Contrôle d'accès</h4>
+<pre data-lang="typescript"><code>@Injectable()
+export class AuthGuard implements CanActivate {
+  constructor(private jwtService: JwtService) {}
+
+  canActivate(context: ExecutionContext): boolean {
+    const request = context.switchToHttp().getRequest();
+    const token = request.headers.authorization?.split(' ')[1];
+    if (!token) throw new UnauthorizedException();
+    try {
+      request.user = this.jwtService.verify(token);
+      return true;
+    } catch {
+      throw new UnauthorizedException();
+    }
+  }
+}
+
+// Utilisation
+@UseGuards(AuthGuard)
+@Get('profile')
+getProfile(@Req() req) {
+  return req.user;
+}</code></pre>
+
+    <h4>Interceptors — Transformation des réponses</h4>
+<pre data-lang="typescript"><code>@Injectable()
+export class TransformInterceptor implements NestInterceptor {
+  intercept(context: ExecutionContext, next: CallHandler): Observable&lt;any&gt; {
+    return next.handle().pipe(
+      map(data => ({ success: true, data, timestamp: new Date() })),
+    );
+  }
+}</code></pre>
+
+    <h4>Exception Filters — Gestion centralisée des erreurs</h4>
+<pre data-lang="typescript"><code>@Catch(HttpException)
+export class HttpExceptionFilter implements ExceptionFilter {
+  catch(exception: HttpException, host: ArgumentsHost) {
+    const ctx = host.switchToHttp();
+    const response = ctx.getResponse();
+    const status = exception.getStatus();
+
+    response.status(status).json({
+      statusCode: status,
+      message: exception.message,
+      timestamp: new Date().toISOString(),
+    });
+  }
+}</code></pre>
+
+    <h3>3.4 Authentification JWT</h3>
+<pre data-lang="bash"><code>npm install @nestjs/jwt @nestjs/passport passport passport-jwt bcrypt
+npm install -D @types/passport-jwt @types/bcrypt</code></pre>
+
+<pre data-lang="typescript"><code>// auth.service.ts
+@Injectable()
+export class AuthService {
+  constructor(
+    private usersService: UsersService,
+    private jwtService: JwtService,
+  ) {}
+
+  async register(dto: RegisterDto) {
+    const hash = await bcrypt.hash(dto.password, 10);
+    return this.usersService.create({ ...dto, password: hash });
+  }
+
+  async login(email: string, password: string) {
+    const user = await this.usersService.findByEmail(email);
+    if (!user || !(await bcrypt.compare(password, user.password))) {
+      throw new UnauthorizedException('Identifiants invalides');
+    }
+    const payload = { sub: user.id, email: user.email };
+    return { access_token: this.jwtService.sign(payload) };
+  }
+}</code></pre>
+
+    <h4>RBAC — Contrôle d'accès basé sur les rôles</h4>
+<pre data-lang="typescript"><code>export const Roles = (...roles: string[]) => SetMetadata('roles', roles);
+
+@Injectable()
+export class RolesGuard implements CanActivate {
+  constructor(private reflector: Reflector) {}
+
+  canActivate(context: ExecutionContext): boolean {
+    const required = this.reflector.get&lt;string[]&gt;('roles', context.getHandler());
+    if (!required) return true;
+    const { user } = context.switchToHttp().getRequest();
+    return required.includes(user.role);
+  }
+}
+
+// Utilisation
+@Roles('admin')
+@UseGuards(AuthGuard, RolesGuard)
+@Delete(':id')
+remove(@Param('id') id: string) { /* ... */ }</code></pre>
+
+    <h3>3.5 Configuration avec @nestjs/config</h3>
+<pre data-lang="typescript"><code>// app.module.ts
+ConfigModule.forRoot({
+  isGlobal: true,
+  envFilePath: '.env',
+})
+
+// Utilisation
+@Injectable()
+export class MyService {
+  constructor(private config: ConfigService) {
+    const dbUrl = this.config.get&lt;string&gt;('DATABASE_URL');
+  }
+}</code></pre>
+
+    <h3>3.6 Exercice pratique</h3>
+    <div class="callout callout-success">
+      <strong>🎯 Projet :</strong> API d'authentification complète avec :<br>
+      • Inscription / Connexion (JWT)<br>
+      • Base PostgreSQL via TypeORM ou Prisma<br>
+      • Rôles (user, admin) avec RolesGuard<br>
+      • Hash bcrypt des mots de passe<br>
+      • Validation stricte des DTOs
+    </div>
+
+    <h3>✅ Checklist de fin de phase</h3>
+    <ul class="checklist">
+      <li>Je sais connecter NestJS à PostgreSQL ou MongoDB</li>
+      <li>Je maîtrise les Guards, Interceptors et Filters</li>
+      <li>Je sais implémenter une auth JWT avec rôles</li>
+      <li>Je comprends la gestion des variables d'environnement</li>
+    </ul>
+  </section>
+
+  <!-- ================= PHASE 4 ================= -->
+  <section class="phase" id="phase4">
+    <h2>🚀 Phase 4 — Niveau avancé</h2>
+    <span class="duration">⏱️ Durée : 3 à 4 semaines</span>
+
+    <div class="objectives">
+      <h4>🎯 Objectifs de la phase</h4>
+      <ul>
+        <li>Concevoir des architectures modulaires complexes</li>
+        <li>Implémenter des microservices et du temps réel</li>
+        <li>Optimiser les performances avec cache et queues</li>
+      </ul>
+    </div>
+
+    <h3>4.1 Architecture avancée</h3>
+    <ul>
+      <li><strong>Modules globaux</strong> : <code>@Global()</code></li>
+      <li><strong>Modules dynamiques</strong> : <code>forRoot()</code>, <code>forFeature()</code></li>
+      <li><strong>Modules partagés</strong> : exports et réutilisation</li>
+      <li><strong>Circular dependencies</strong> : <code>forwardRef()</code></li>
+      <li><strong>Monorepo</strong> : <code>nest new --monorepo</code></li>
+    </ul>
+
+<pre data-lang="typescript"><code>// Module dynamique
+@Module({})
+export class DatabaseModule {
+  static forRoot(config: DbConfig): DynamicModule {
+    return {
+      module: DatabaseModule,
+      providers: [
+        { provide: 'DB_CONFIG', useValue: config },
+        DatabaseService,
+      ],
+      exports: [DatabaseService],
+      global: true,
+    };
+  }
+}</code></pre>
+
+    <h3>4.2 Microservices</h3>
+    <ul>
+      <li>Transporters : TCP, Redis, RabbitMQ, Kafka, gRPC, NATS</li>
+      <li>Communication synchrone (<code>send</code>) vs asynchrone (<code>emit</code>)</li>
+      <li>Patterns : Request-Response, Event-Based</li>
+    </ul>
+
+<pre data-lang="typescript"><code>// main.ts (microservice)
+const app = await NestFactory.createMicroservice&lt;MicroserviceOptions&gt;(AppModule, {
+  transport: Transport.REDIS,
+  options: { host: 'localhost', port: 6379 },
+});
+await app.listen();
+
+// Client
+@Injectable()
+export class UsersClient {
+  constructor(@Inject('USERS_SERVICE') private client: ClientProxy) {}
+
+  findAll() {
+    return this.client.send({ cmd: 'get_users' }, {});
+  }
+
+  async createUser(data: any) {
+    this.client.emit('user_created', data).subscribe();
+  }
+}</code></pre>
+
+    <h3>4.3 Communication temps réel</h3>
+
+    <h4>WebSockets avec Socket.io</h4>
+<pre data-lang="bash"><code>npm install @nestjs/websockets @nestjs/platform-socket.io</code></pre>
+
+<pre data-lang="typescript"><code>@WebSocketGateway({ cors: true })
+export class ChatGateway {
+  @WebSocketServer() server: Server;
+
+  @SubscribeMessage('message')
+  handleMessage(@MessageBody() data: any, @ConnectedSocket() client: Socket) {
+    this.server.emit('message', { from: client.id, ...data });
+  }
+}</code></pre>
+
+    <h4>GraphQL (code-first)</h4>
+<pre data-lang="bash"><code>npm install @nestjs/graphql @nestjs/apollo graphql apollo-server-express</code></pre>
+
+<pre data-lang="typescript"><code>@ObjectType()
+export class User {
+  @Field()
+  id: number;
+
+  @Field()
+  email: string;
+}
+
+@Resolver(() => User)
+export class UsersResolver {
+  constructor(private usersService: UsersService) {}
+
+  @Query(() => [User])
+  users() {
+    return this.usersService.findAll();
+  }
+
+  @Mutation(() => User)
+  createUser(@Args('input') input: CreateUserInput) {
+    return this.usersService.create(input);
+  }
+}</code></pre>
+
+    <h3>4.4 Tâches asynchrones</h3>
+
+    <h4>Queues avec BullMQ</h4>
+<pre data-lang="bash"><code>npm install @nestjs/bullmq bullmq ioredis</code></pre>
+
+<pre data-lang="typescript"><code>@Processor('email')
+export class EmailProcessor {
+  @Process('welcome')
+  async handleWelcome(job: Job) {
+    await sendWelcomeEmail(job.data.userId);
+  }
+}
+
+// Ajout d'un job
+await this.emailQueue.add('welcome', { userId: 1 });
+</code></pre>
+
+    <h4>Cron jobs</h4>
+<pre data-lang="bash"><code>npm install @nestjs/schedule</code></pre>
+
+<pre data-lang="typescript"><code>@Injectable()
+export class TasksService {
+  @Cron('0 0 * * *') // tous les jours à minuit
+  cleanupDatabase() {
+    console.log('Nettoyage quotidien...');
+  }
+
+  @Interval(60000)
+  heartbeat() {
+    console.log('Ping');
+  }
+}</code></pre>
+
+    <h3>4.5 Performance & Cache</h3>
+<pre data-lang="bash"><code>npm install @nestjs/cache-manager cache-manager redis</code></pre>
+
+<pre data-lang="typescript"><code>@Injectable()
+export class UsersService {
+  constructor(
+    @Inject(CACHE_MANAGER) private cache: Cache,
+    private repo: UsersRepository,
+  ) {}
+
+  async findOne(id: number) {
+    const cached = await this.cache.get(`user:${id}`);
+    if (cached) return cached;
+
+    const user = await this.repo.findOne(id);
+    await this.cache.set(`user:${id}`, user, 60000);
+    return user;
+  }
+}</code></pre>
+
+    <h4>Rate limiting</h4>
+<pre data-lang="typescript"><code>// app.module.ts
+ThrottlerModule.forRoot([{
+  ttl: 60000,
+  limit: 10,
+}])
+
+// Contrôleur
+@Throttle({ default: { limit: 3, ttl: 60000 } })
+@Post('login')
+login() { /* ... */ }</code></pre>
+
+    <h3>✅ Checklist de fin de phase</h3>
+    <ul class="checklist">
+      <li>Je sais créer un module dynamique réutilisable</li>
+      <li>Je comprends la communication entre microservices</li>
+      <li>J'ai implémenté un gateway WebSocket ou GraphQL</li>
+      <li>Je sais utiliser BullMQ pour les tâches lourdes</li>
+      <li>J'ai mis en place un cache Redis</li>
+    </ul>
+  </section>
+
+  <!-- ================= PHASE 5 ================= -->
+  <section class="phase" id="phase5">
+    <h2>🎯 Phase 5 — Production & bonnes pratiques</h2>
+    <span class="duration">⏱️ Durée : 2 à 3 semaines</span>
+
+    <div class="objectives">
+      <h4>🎯 Objectifs de la phase</h4>
+      <ul>
+        <li>Tester rigoureusement son application</li>
+        <li>Documenter avec Swagger/OpenAPI</li>
+        <li>Déployer en production avec Docker et CI/CD</li>
+      </ul>
+    </div>
+
+    <h3>5.1 Tests</h3>
+
+    <h4>Test unitaire (Jest)</h4>
+<pre data-lang="typescript"><code>describe('UsersService', () => {
+  let service: UsersService;
+  let repo: Repository&lt;User&gt;;
+
+  beforeEach(async () => {
+    const module = await Test.createTestingModule({
+      providers: [
+        UsersService,
+        { provide: getRepositoryToken(User), useValue: mockRepo },
+      ],
+    }).compile();
+
+    service = module.get(UsersService);
+    repo = module.get(getRepositoryToken(User));
+  });
+
+  it('devrait créer un utilisateur', async () => {
+    const dto = { email: 'test@test.com', password: 'pass' };
+    jest.spyOn(repo, 'save').mockResolvedValue({ id: 1, ...dto } as User);
+
+    expect(await service.create(dto)).toEqual({ id: 1, ...dto });
+  });
+});</code></pre>
+
+    <h4>Test E2E (Supertest)</h4>
+<pre data-lang="typescript"><code>describe('UsersController (e2e)', () => {
+  let app: INestApplication;
+
+  beforeAll(async () => {
+    const module = await Test.createTestingModule({
+      imports: [AppModule],
+    }).compile();
+
+    app = module.createNestApplication();
+    await app.init();
+  });
+
+  it('GET /users → 200', () => {
+    return request(app.getHttpServer())
+      .get('/users')
+      .expect(200)
+      .expect('Content-Type', /json/);
+  });
+});</code></pre>
+
+    <h3>5.2 Documentation avec Swagger</h3>
+<pre data-lang="bash"><code>npm install @nestjs/swagger</code></pre>
+
+<pre data-lang="typescript"><code>// main.ts
+const config = new DocumentBuilder()
+  .setTitle('Mon API')
+  .setDescription('Documentation de l\'API')
+  .setVersion('1.0')
+  .addBearerAuth()
+  .build();
+
+const document = SwaggerModule.createDocument(app, config);
+SwaggerModule.setup('api', app, document);
+
+// DTO décoré
+export class CreateUserDto {
+  @ApiProperty({ example: 'user@example.com' })
+  @IsEmail()
+  email: string;
+
+  @ApiProperty({ example: 'motdepasse123', minLength: 8 })
+  @MinLength(8)
+  password: string;
+}</code></pre>
+
+    <h3>5.3 Sécurité</h3>
+    <ul>
+      <li><strong>Helmet</strong> : headers de sécurité</li>
+      <li><strong>CORS</strong> : configuration stricte</li>
+      <li><strong>Rate limiting</strong> : protection anti-bruteforce</li>
+      <li><strong>Validation stricte</strong> : <code>whitelist: true</code></li>
+      <li><strong>Secrets</strong> : jamais dans le code, toujours en env</li>
+    </ul>
+
+<pre data-lang="typescript"><code>import helmet from 'helmet';
+
+app.use(helmet());
+app.enableCors({
+  origin: ['https://mon-frontend.com'],
+  credentials: true,
+});</code></pre>
+
+    <h3>5.4 Docker & Déploiement</h3>
+<pre data-lang="dockerfile"><code># Dockerfile multi-stage
+FROM node:20-alpine AS builder
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci
+COPY . .
+RUN npm run build
+
+FROM node:20-alpine AS runner
+WORKDIR /app
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/node_modules ./node_modules
+COPY package*.json ./
+EXPOSE 3000
+CMD ["node", "dist/main.js"]</code></pre>
+
+<pre data-lang="yaml"><code># docker-compose.yml
+version: '3.9'
+services:
+  api:
+    build: .
+    ports: ['3000:3000']
+    environment:
+      DATABASE_URL: postgres://user:pass@db:5432/mydb
+    depends_on: [db, redis]
+
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pass
+      POSTGRES_DB: mydb
+    volumes: ['pgdata:/var/lib/postgresql/data']
+
+  redis:
+    image: redis:7-alpine
+
+volumes:
+  pgdata:</code></pre>
+
+    <h4>CI/CD avec GitHub Actions</h4>
+<pre data-lang="yaml"><code>name: CI
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20, cache: 'npm' }
+      - run: npm ci
+      - run: npm run lint
+      - run: npm test
+      - run: npm run build</code></pre>
+
+    <h3>5.5 Architecture propre</h3>
+    <ul>
+      <li><strong>Clean Architecture</strong> : séparation domain / application / infrastructure</li>
+      <li><strong>Hexagonal</strong> : ports & adapters</li>
+      <li><strong>DDD</strong> : entités, value objects, agrégats</li>
+      <li><strong>CQRS</strong> : séparation commandes / requêtes (<code>@nestjs/cqrs</code>)</li>
+    </ul>
+
+<pre data-lang="typescript"><code>// Structure Clean Architecture
+src/
+├── domain/              # Entités, value objects
+├── application/         # Use cases, DTOs
+├── infrastructure/      # BDD, HTTP, externes
+└── presentation/        # Controllers, resolvers</code></pre>
+
+    <h3>5.6 Monitoring & observabilité</h3>
+    <ul>
+      <li><strong>Logs structurés</strong> : Winston, Pino</li>
+      <li><strong>Health checks</strong> : <code>@nestjs/terminus</code></li>
+      <li><strong>Métriques</strong> : Prometheus + Grafana</li>
+      <li><strong>Traces</strong> : OpenTelemetry</li>
+    </ul>
+
+    <h3>✅ Checklist de fin de phase</h3>
+    <ul class="checklist">
+      <li>J'ai écrit des tests unitaires et E2E</li>
+      <li>Mon API est documentée avec Swagger</li>
+      <li>Je sais dockeriser et déployer une app NestJS</li>
+      <li>J'ai mis en place un pipeline CI/CD</li>
+      <li>Je comprends les principes de Clean Architecture</li>
+    </ul>
+  </section>
+
+  <!-- ================= PROJETS ================= -->
+  <section class="phase" id="projets">
+    <h2>🛠️ Projets pratiques par niveau</h2>
+
+    <p>La théorie ne suffit pas. Voici une progression de projets concrets à réaliser tout au long du parcours.</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Niveau</th>
+          <th>Projet</th>
+          <th>Compétences mobilisées</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>🟢 Débutant</td>
+          <td><strong>API Todo CRUD</strong></td>
+          <td>Modules, Controllers, Services, DTO, Pipes</td>
+        </tr>
+        <tr>
+          <td>🟡 Intermédiaire</td>
+          <td><strong>Blog API avec auth JWT + PostgreSQL</strong></td>
+          <td>TypeORM/Prisma, Guards, Bcrypt, ConfigModule</td>
+        </tr>
+        <tr>
+          <td>🟠 Avancé</td>
+          <td><strong>E-commerce (panier, commandes, Stripe)</strong></td>
+          <td>Transactions, Queues, Webhooks, Swagger</td>
+        </tr>
+        <tr>
+          <td>🔴 Expert</td>
+          <td><strong>Plateforme temps réel (chat + notifs)</strong></td>
+          <td>WebSockets, Microservices, Redis, Docker, CI/CD</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout callout-warning">
+      <strong>⚠️ Important :</strong> Ne te contente pas de suivre des tutoriels. <strong>Construis tes propres projets</strong> avec des fonctionnalités que tu inventes. C'est là que l'apprentissage réel se produit.
+    </div>
+  </section>
+
+  <!-- ================= RESSOURCES ================= -->
+  <section class="phase" id="ressources">
+    <h2>📖 Ressources & conseils finaux</h2>
+
+    <h3>Documentation & cours officiels</h3>
+    <ul>
+      <li><a href="https://docs.nestjs.com" target="_blank">📘 Documentation officielle NestJS</a> — la meilleure ressource, très complète</li>
+      <li><a href="https://courses.nestjs.com" target="_blank">🎓 NestJS Fundamentals (officiel)</a></li>
+      <li><a href="https://github.com/nestjs/nest" target="_blank">💻 GitHub officiel</a> — lire le code source</li>
+    </ul>
+
+    <h3>Cours vidéo</h3>
+    <ul>
+      <li><strong>Udemy</strong> : "NestJS Zero to Hero" par Ariel Weinberger</li>
+      <li><strong>YouTube</strong> : Academind, Traversy Media, Domini Code (FR), DevTheory (FR)</li>
+      <li><strong>Frontend Masters</strong> : cours NestJS avancés</li>
+    </ul>
+
+    <h3>Livres</h3>
+    <ul>
+      <li><em>NestJS in Action</em> — Manning Publications</li>
+      <li><em>Mastering NestJS</em> — Packt</li>
+    </ul>
+
+    <h3>Communautés</h3>
+    <ul>
+      <li>Discord officiel NestJS</li>
+      <li>Reddit : r/NestJS_framework</li>
+      <li>Stack Overflow : tag <code>nestjs</code></li>
+    </ul>
+
+    <h3>💡 Les 10 conseils clés</h3>
+    <ol>
+      <li><strong>Code tous les jours</strong>, même 30 minutes</li>
+      <li><strong>Ne saute pas TypeScript</strong> — c'est non négociable</li>
+      <li><strong>Lis la doc officielle</strong> — elle est excellente et à jour</li>
+      <li><strong>Construis des projets réels</strong>, pas juste des tutos</li>
+      <li><strong>Apprends Prisma ou TypeORM en profondeur</strong></li>
+      <li><strong>Maîtrise la DI</strong> — c'est le cœur de NestJS</li>
+      <li><strong>Écris des tests dès le début</strong></li>
+      <li><strong>Contribue à l'open source</strong> — lis du code de qualité</li>
+      <li><strong>Documente ton code</strong> avec Swagger</li>
+      <li><strong>Déploie tes projets</strong> — apprends Docker et CI/CD</li>
+    </ol>
+
+    <h3>⏱️ Récapitulatif du planning</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Phase</th>
+          <th>Durée</th>
+          <th>Livrable</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Phase 1 — Prérequis</td><td>1-2 semaines</td><td>Maîtrise TypeScript + Node</td></tr>
+        <tr><td>Phase 2 — Fondamentaux</td><td>2-3 semaines</td><td>API CRUD en mémoire</td></tr>
+        <tr><td>Phase 3 — Intermédiaire</td><td>3-4 semaines</td><td>API avec auth + BDD</td></tr>
+        <tr><td>Phase 4 — Avancé</td><td>3-4 semaines</td><td>Microservices / temps réel</td></tr>
+        <tr><td>Phase 5 — Production</td><td>2-3 semaines</td><td>App déployée avec tests + CI/CD</td></tr>
+        <tr><td><strong>Total</strong></td><td><strong>≈ 6 mois</strong></td><td><strong>Développeur NestJS opérationnel</strong></td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout callout-success">
+      <strong>🎉 Bravo !</strong> Si tu suis ce plan rigoureusement, tu seras en mesure de concevoir, développer, tester et déployer des applications NestJS robustes en production. La clé : <strong>la régularité</strong> et <strong>la pratique</strong>.
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <p><strong>🦅 Guide complet d'apprentissage NestJS</strong></p>
+  <p>Document généré pour accompagner ton parcours d'apprentissage — 5 phases, 6 mois, un objectif : la maîtrise.</p>
+  <p style="margin-top: 20px;">Documentation officielle : <a href="https://docs.nestjs.com" target="_blank">docs.nestjs.com</a></p>
+</footer>
+
+</body>
+</html>

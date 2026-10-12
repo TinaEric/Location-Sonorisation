@@ -1,0 +1,46 @@
+- Tout utilisateur (locataire ou loueur) doit s'authentifier avant d'accéder aux fonctionnalités.
+- le locataire peut consulter le matériel, vérifier sa disponibilité, faire une réservation, suivre l'état de sa réservation,  modifier ou annuler une réservation .
+
+
+- Chaque matériel appartient à une et une seule catégorie et Une catégorie peut contenir plusieurs matériels.
+- Le nombre de stock disponible est inférieur ou égal au nombre de stock total.
+
+
+- Une réservation est composée d'une ou plusieurs lignes de détail.
+- Un utilisateur (locataire) peut demander plusieurs réservations. 
+- Une réservation est demandée par un seul utilisateur.
+- Une réservation confirmée inclut obligatoirement le paiement de la location. 
+- Chaque ligne de détail est associée à une seule réservation. 
+- Chaque ligne de détail est associée à un seul matériel.
+- Chaque ligne de détail peut inclure des accessoires.
+
+- La réservation inclut obligatoirement le paiement
+- Le paiement de la location est obligatoire pour confirmer une réservation.
+- Un paiement est relié à une seule réservation.
+- Une réservation peut avoir plusieurs paiements, une acompte de 30% avant de confirmer la réservation, une paiement total au retrait du matériel, paiement des pénalité après la retour s'il y a des anomalies.
+
+
+
+- Une réservation est composée d'au moins une ligne de détail
+- Une ligne de réservation est liée à une seule réservation.
+- Une ligne de réservation référence un seul modèle (pas un article précis).
+- Une réservation est reliée à au moins un paiement
+- Un utilisateur peut demander zéro ou plusieurs réservations
+- Une catégorie peut contenir un ou plusieurs modèles
+- Un modèle appartient à une seule catégorie
+- Un modèle peut avoir un ou plusieurs articles.
+- Un article ne peut être affecté qu'à une seule ligne de réservation à la fois.
+- Un article appartient à un seul modèle.
+
+
+- Une ligne de réservation concerne exactement 1 fiche technique spécifique et n produit peut se retrouver dans 0 à plusieurs lignes de commande différentes.
+- Une réservation possède 1 à plusieurs (1..*) lignes de réservation.
+- Une ligne de réservation appartient à 1 et une seule (1) réservation précise.
+- Une fiche technique peut avoir plusieurs matériel physique et un matériel physique appartient à exactement un fiche technique
+
+
+
+
+
+
+

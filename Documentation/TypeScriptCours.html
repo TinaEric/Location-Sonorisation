@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guide d'apprentissage TypeScript</title>
+<style>
+  :root {
+    --ts-blue: #3178c6;
+    --ts-blue-dark: #235a97;
+    --ts-blue-light: #e8f1fa;
+    --bg: #f7f9fc;
+    --text: #1e293b;
+    --muted: #64748b;
+    --border: #e2e8f0;
+    --code-bg: #1e293b;
+    --code-text: #e2e8f0;
+    --accent: #f59e0b;
+    --success: #10b981;
+    --danger: #ef4444;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    line-height: 1.7;
+    color: var(--text);
+    background: var(--bg);
+    display: flex;
+    min-height: 100vh;
+  }
+
+  /* ---------- SIDEBAR ---------- */
+  aside {
+    width: 280px;
+    background: white;
+    border-right: 1px solid var(--border);
+    padding: 24px 0;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    flex-shrink: 0;
+  }
+
+  aside h2 {
+    font-size: 1rem;
+    color: var(--ts-blue);
+    padding: 0 24px 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 700;
+  }
+
+  aside nav a {
+    display: block;
+    padding: 8px 24px;
+    color: var(--text);
+    text-decoration: none;
+    font-size: 0.9rem;
+    border-left: 3px solid transparent;
+    transition: all 0.15s;
+  }
+
+  aside nav a:hover {
+    background: var(--ts-blue-light);
+    color: var(--ts-blue);
+    border-left-color: var(--ts-blue);
+  }
+
+  aside nav .section-title {
+    padding: 16px 24px 6px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  /* ---------- MAIN ---------- */
+  main {
+    flex: 1;
+    max-width: 900px;
+    padding: 48px 56px;
+    margin: 0 auto;
+  }
+
+  header.hero {
+    background: linear-gradient(135deg, var(--ts-blue) 0%, var(--ts-blue-dark) 100%);
+    color: white;
+    padding: 48px 40px;
+    border-radius: 12px;
+    margin-bottom: 48px;
+    text-align: center;
+  }
+
+  header.hero h1 {
+    font-size: 2.4rem;
+    margin-bottom: 12px;
+    font-weight: 800;
+  }
+
+  header.hero p {
+    font-size: 1.1rem;
+    opacity: 0.95;
+  }
+
+  header.hero .logo {
+    display: inline-block;
+    background: white;
+    color: var(--ts-blue);
+    font-weight: 800;
+    padding: 8px 20px;
+    border-radius: 6px;
+    margin-bottom: 16px;
+    font-size: 1.1rem;
+  }
+
+  section {
+    background: white;
+    padding: 32px;
+    border-radius: 10px;
+    margin-bottom: 32px;
+    border: 1px solid var(--border);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+  }
+
+  h2 {
+    font-size: 1.6rem;
+    color: var(--ts-blue-dark);
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--ts-blue-light);
+  }
+
+  h3 {
+    font-size: 1.2rem;
+    color: var(--ts-blue);
+    margin: 24px 0 12px;
+  }
+
+  h4 {
+    font-size: 1.05rem;
+    margin: 16px 0 8px;
+    color: var(--text);
+  }
+
+  p { margin-bottom: 12px; }
+
+  ul, ol { margin: 12px 0 12px 24px; }
+  li { margin-bottom: 6px; }
+
+  /* ---------- CODE ---------- */
+  pre {
+    background: var(--code-bg);
+    color: var(--code-text);
+    padding: 18px 20px;
+    border-radius: 8px;
+    overflow-x: auto;
+    margin: 14px 0;
+    font-size: 0.9rem;
+    line-height: 1.55;
+    font-family: "SF Mono", Monaco, "Cascadia Code", Consolas, monospace;
+  }
+
+  code {
+    font-family: "SF Mono", Monaco, "Cascadia Code", Consolas, monospace;
+    font-size: 0.9em;
+    background: var(--ts-blue-light);
+    color: var(--ts-blue-dark);
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+
+  pre code {
+    background: transparent;
+    color: inherit;
+    padding: 0;
+  }
+
+  /* ---------- TABLES ---------- */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-size: 0.92rem;
+  }
+
+  th, td {
+    padding: 10px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+
+  th {
+    background: var(--ts-blue-light);
+    color: var(--ts-blue-dark);
+    font-weight: 700;
+  }
+
+  tr:hover { background: #fafbfc; }
+
+  /* ---------- CALLOUTS ---------- */
+  .callout {
+    padding: 16px 20px;
+    border-radius: 8px;
+    margin: 16px 0;
+    border-left: 4px solid;
+    font-size: 0.95rem;
+  }
+
+  .callout.info {
+    background: var(--ts-blue-light);
+    border-color: var(--ts-blue);
+  }
+
+  .callout.warn {
+    background: #fef3c7;
+    border-color: var(--accent);
+  }
+
+  .callout.success {
+    background: #d1fae5;
+    border-color: var(--success);
+  }
+
+  .callout.danger {
+    background: #fee2e2;
+    border-color: var(--danger);
+  }
+
+  .callout strong { display: block; margin-bottom: 4px; }
+
+  /* ---------- BADGES ---------- */
+  .badge {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+
+  .badge.js { background: #f7df1e; color: #000; }
+  .badge.ts { background: var(--ts-blue); color: white; }
+
+  /* ---------- CHECKLIST ---------- */
+  .checklist {
+    list-style: none;
+    margin-left: 0;
+  }
+
+  .checklist li {
+    padding: 6px 0 6px 30px;
+    position: relative;
+  }
+
+  .checklist li::before {
+    content: "☐";
+    position: absolute;
+    left: 0;
+    color: var(--ts-blue);
+    font-size: 1.2rem;
+    font-weight: bold;
+  }
+
+  /* ---------- PROGRESS ---------- */
+  .progress-bar {
+    background: var(--border);
+    border-radius: 20px;
+    height: 8px;
+    overflow: hidden;
+    margin: 8px 0 20px;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--ts-blue), var(--success));
+    border-radius: 20px;
+  }
+
+  /* ---------- RESPONSIVE ---------- */
+  @media (max-width: 900px) {
+    body { flex-direction: column; }
+    aside { width: 100%; height: auto; position: relative; border-right: none; border-bottom: 1px solid var(--border); }
+    main { padding: 24px 20px; }
+    header.hero h1 { font-size: 1.8rem; }
+    section { padding: 20px; }
+  }
+
+  /* ---------- FOOTER ---------- */
+  footer {
+    text-align: center;
+    padding: 32px 0;
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+</style>
+</head>
+<body>
+
+<!-- ================= SIDEBAR ================= -->
+<aside>
+  <h2>📘 Sommaire</h2>
+  <nav>
+    <div class="section-title">Introduction</div>
+    <a href="#intro">Qu'est-ce que TS ?</a>
+    <a href="#pourquoi">Pourquoi l'utiliser ?</a>
+    <a href="#plan">Plan d'apprentissage</a>
+
+    <div class="section-title">Fondamentaux</div>
+    <a href="#types-base">Types de base</a>
+    <a href="#fonctions">Fonctions</a>
+
+    <div class="section-title">POO</div>
+    <a href="#classes">Classes & POO</a>
+
+    <div class="section-title">Avancé</div>
+    <a href="#types-interfaces">Types vs Interfaces</a>
+    <a href="#generics">Generics</a>
+    <a href="#decorateurs">Décorateurs</a>
+    <a href="#async">Async / Await</a>
+
+    <div class="section-title">Pratique</div>
+    <a href="#ressources">Ressources</a>
+    <a href="#checklist">Checklist finale</a>
+  </nav>
+</aside>
+
+<!-- ================= MAIN ================= -->
+<main>
+
+  <header class="hero">
+    <div class="logo">TS</div>
+    <h1>Guide d'apprentissage TypeScript</h1>
+    <p>De débutant à avancé — du JavaScript typé à la POO moderne</p>
+  </header>
+
+  <!-- ========== INTRO ========== -->
+  <section id="intro">
+    <h2>🔷 Qu'est-ce que TypeScript ?</h2>
+    <p>
+      <strong>TypeScript</strong> est un langage open-source développé par <strong>Microsoft</strong> (créé par Anders Hejlsberg en 2012). C'est un <strong>sur-ensemble de JavaScript</strong> : tout code JS valide est du TS valide.
+    </p>
+    <p>
+      Sa particularité : il ajoute un <strong>système de types statiques</strong> qui vérifie ton code <em>avant</em> l'exécution.
+    </p>
+
+    <pre><code>TypeScript  ──(compilation)──►  JavaScript
+   (.ts)                          (.js)</code></pre>
+
+    <div class="callout info">
+      <strong>💡 À retenir</strong>
+      Le navigateur et Node.js ne comprennent pas TypeScript directement. Le code <code>.ts</code> doit être compilé en JavaScript exécutable.
+    </div>
+
+    <h3>Exemple simple</h3>
+    <p><span class="badge js">JavaScript</span></p>
+    <pre><code>function addition(a, b) {
+  return a + b;
+}
+addition(5, "10"); // ⚠️ "510" — bug silencieux</code></pre>
+
+    <p><span class="badge ts">TypeScript</span></p>
+    <pre><code>function addition(a: number, b: number): number {
+  return a + b;
+}
+addition(5, "10"); // ❌ Erreur détectée AVANT l'exécution</code></pre>
+  </section>
+
+  <!-- ========== POURQUOI ========== -->
+  <section id="pourquoi">
+    <h2>🔷 Pourquoi utiliser TypeScript ?</h2>
+
+    <h3>✅ Les avantages</h3>
+    <ol>
+      <li><strong>Détecter les erreurs avant l'exécution</strong> — bugs de type attrapés à la compilation.</li>
+      <li><strong>Meilleure autocomplétion</strong> — IntelliSense précis dans VS Code.</li>
+      <li><strong>Refactoring sûr</strong> — l'IDE signale tous les endroits à modifier.</li>
+      <li><strong>Code auto-documenté</strong> — les types racontent l'intention.</li>
+      <li><strong>Idéal en équipe</strong> — contrats clairs, moins de régressions.</li>
+      <li><strong>Adopté massivement</strong> — Angular, React, Vue 3, NestJS, Vite…</li>
+      <li><strong>Migration progressive</strong> — on peut typer petit à petit.</li>
+    </ol>
+
+    <h3>⚠️ Les inconvénients</h3>
+    <table>
+      <thead>
+        <tr><th>Inconvénient</th><th>Détail</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Étape de compilation</td><td>Ajoute un build (léger avec Vite/esbuild)</td></tr>
+        <tr><td>Courbe d'apprentissage</td><td>Génériques et types avancés = complexes</td></tr>
+        <tr><td>Faux sentiment de sécurité</td><td>Types disparaissent à l'exécution → valider les données externes (Zod, Yup)</td></tr>
+        <tr><td>Verbosité</td><td>Plus de code à écrire au début</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout warn">
+      <strong>⚠️ Important</strong>
+      Les types TS <strong>n'existent pas à l'exécution</strong>. Pour valider des données externes (API, formulaires), il faut des outils comme Zod, Yup ou io-ts.
+    </div>
+  </section>
+
+  <!-- ========== PLAN ========== -->
+  <section id="plan">
+    <h2>🔷 Plan d'apprentissage (6-10 semaines)</h2>
+
+    <div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div>
+
+    <h3>📅 Phase 1 — Fondations (Semaine 1-2)</h3>
+    <ul>
+      <li>Introduction, installation, compilation (<code>tsc</code>)</li>
+      <li>Types de base : <code>string</code>, <code>number</code>, <code>boolean</code>, <code>null</code>, <code>undefined</code></li>
+      <li><code>any</code>, <code>unknown</code>, <code>never</code>, <code>void</code></li>
+      <li>Tableaux, tuples, objets, <code>enum</code></li>
+      <li>Fonctions typées</li>
+      <li>Interfaces & types</li>
+    </ul>
+
+    <h3>📅 Phase 2 — Intermédiaire (Semaine 3-4)</h3>
+    <ul>
+      <li>Unions & intersections, narrowing</li>
+      <li>Génériques (fonctions, classes, contraintes)</li>
+      <li>Classes & POO (public/private/protected/readonly)</li>
+      <li>Modules ES / CommonJS</li>
+      <li><code>tsconfig.json</code>, ESLint, Prettier</li>
+    </ul>
+
+    <h3>📅 Phase 3 — Avancé (Semaine 5-6)</h3>
+    <ul>
+      <li>Utility Types : <code>Partial</code>, <code>Pick</code>, <code>Omit</code>, <code>Record</code>…</li>
+      <li>Types conditionnels & mapped types</li>
+      <li>Décorateurs (Angular, NestJS)</li>
+      <li>Gestion d'erreurs & typage strict</li>
+    </ul>
+
+    <h3>📅 Phase 4 — Écosystème (Semaine 7-8)</h3>
+    <ul>
+      <li>TypeScript avec React (props, hooks, events)</li>
+      <li>TypeScript avec Node.js / Express</li>
+      <li>Tests avec Jest + ts-jest</li>
+      <li>Vite / Webpack + TS</li>
+      <li>Publication d'un package npm typé</li>
+    </ul>
+
+    <div class="callout success">
+      <strong>🎯 Projet final</strong>
+      Application full-stack (API REST + front React) entièrement en TypeScript.
+    </div>
+  </section>
+
+  <!-- ========== TYPES DE BASE ========== -->
+  <section id="types-base">
+    <h2>🔷 Types de base</h2>
+
+    <table>
+      <thead>
+        <tr><th>Type</th><th>JS</th><th>TS</th><th>Exemple</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Nombre</td><td>✅</td><td>✅</td><td><code>let n: number = 42;</code></td></tr>
+        <tr><td>Chaîne</td><td>✅</td><td>✅</td><td><code>let s: string = "hello";</code></td></tr>
+        <tr><td>Booléen</td><td>✅</td><td>✅</td><td><code>let b: boolean = true;</code></td></tr>
+        <tr><td>Null / Undefined</td><td>✅</td><td>✅</td><td><code>let x: null = null;</code></td></tr>
+        <tr><td>Tableau</td><td>✅</td><td>✅</td><td><code>let a: number[] = [1,2];</code></td></tr>
+        <tr><td>Tuple</td><td>❌</td><td>✅</td><td><code>let p: [number, number] = [1,2];</code></td></tr>
+        <tr><td>Enum</td><td>❌</td><td>✅</td><td><code>enum S { A, B }</code></td></tr>
+        <tr><td>Any</td><td>—</td><td>✅</td><td><code>let x: any = ...</code></td></tr>
+        <tr><td>Unknown</td><td>—</td><td>✅</td><td><code>let x: unknown = ...</code></td></tr>
+        <tr><td>Never</td><td>—</td><td>✅</td><td><code>function f(): never { throw ... }</code></td></tr>
+        <tr><td>Void</td><td>—</td><td>✅</td><td><code>function f(): void {}</code></td></tr>
+        <tr><td>Union</td><td>❌</td><td>✅</td><td><code>let x: string \| number;</code></td></tr>
+      </tbody>
+    </table>
+
+    <h3>Exemples comparés</h3>
+
+    <p><span class="badge js">JavaScript</span></p>
+    <pre><code>let nom = "Alice";
+let mixte = [1, "deux", true]; // ✅ autorisé (mais risqué)</code></pre>
+
+    <p><span class="badge ts">TypeScript</span></p>
+    <pre><code>let nom: string = "Alice";
+let mixte: (number | string)[] = [1, "deux"]; // ✅ typé
+// let mixte2: number[] = [1, "deux"];        // ❌ Erreur</code></pre>
+
+    <h3>Inférence automatique</h3>
+    <pre><code>let nom = "Alice"; // TS comprend : string
+nom = 42;          // ❌ Erreur</code></pre>
+
+    <h3><code>unknown</code> — le <code>any</code> sécurisé</h3>
+    <pre><code>let data: unknown = "texte";
+// data.toUpperCase(); // ❌ Interdit tant qu'on n'a pas vérifié
+if (typeof data === "string") {
+  data.toUpperCase(); // ✅ OK après narrowing
+}</code></pre>
+  </section>
+
+  <!-- ========== FONCTIONS ========== -->
+  <section id="fonctions">
+    <h2>🔷 Fonctions</h2>
+
+    <h3>Paramètres typés</h3>
+    <p><span class="badge js">JavaScript</span></p>
+    <pre><code>function saluer(nom, age) {
+  return `Bonjour ${nom}, tu as ${age} ans`;
+}
+saluer();              // ⚠️ undefined partout
+saluer("Alice", "30"); // ⚠️ age est une string</code></pre>
+
+    <p><span class="badge ts">TypeScript</span></p>
+    <pre><code>function saluer(nom: string, age: number): string {
+  return `Bonjour ${nom}, tu as ${age} ans`;
+}
+
+saluer("Alice", 30);     // ✅
+// saluer();              // ❌ Paramètres manquants
+// saluer("Alice", "30"); // ❌ Mauvais type</code></pre>
+
+    <h3>Paramètres optionnels et par défaut</h3>
+    <pre><code>function saluer(nom: string, titre: string = "M."): string {
+  return `${titre} ${nom}`;
+}
+
+function saluer2(nom: string, titre?: string): string {
+  return titre ? `${titre} ${nom}` : nom;
+}</code></pre>
+
+    <h3>Fonctions fléchées typées</h3>
+    <pre><code>const addition = (a: number, b: number): number => a + b;
+
+// Callback typé
+const nombres = [1, 2, 3];
+nombres.map((n: number): number => n * 2);</code></pre>
+
+    <h3>Fonctions comme types</h3>
+    <pre><code>type Operation = (a: number, b: number) => number;
+
+const somme: Operation = (a, b) => a + b;
+
+function calculer(a: number, b: number, op: Operation): number {
+  return op(a, b);
+}
+calculer(2, 3, somme); // 5</code></pre>
+
+    <h3>Surcharge (overloads)</h3>
+    <pre><code>function format(x: string): string;
+function format(x: number): string;
+function format(x: string | number): string {
+  return typeof x === "string" ? x.toUpperCase() : x.toFixed(2);
+}
+
+format("abc");   // "ABC"
+format(3.14159); // "3.14"</code></pre>
+
+    <div class="callout info">
+      <strong>💡 Récapitulatif</strong>
+      TS ajoute aux fonctions : typage des paramètres, type de retour, surcharges, <code>this</code> typé, callbacks typés.
+    </div>
+  </section>
+
+  <!-- ========== CLASSES ========== -->
+  <section id="classes">
+    <h2>🔷 Classes & POO</h2>
+
+    <h3>Modificateurs d'accès</h3>
+    <table>
+      <thead>
+        <tr><th>Modificateur</th><th>Dans la classe</th><th>Hors classe</th><th>Héritage</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>public</code> (défaut)</td><td>✅</td><td>✅</td><td>✅</td></tr>
+        <tr><td><code>protected</code></td><td>✅</td><td>❌</td><td>✅</td></tr>
+        <tr><td><code>private</code></td><td>✅</td><td>❌</td><td>❌</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Paramètres de propriété (raccourci TS)</h3>
+    <pre><code>class Personne {
+  constructor(
+    public nom: string,
+    public age: number,
+    private id: number
+  ) {}
+}</code></pre>
+
+    <h3>Héritage</h3>
+    <pre><code>class Animal {
+  constructor(public nom: string) {}
+  crier(): void { console.log("..."); }
+}
+
+class Chien extends Animal {
+  constructor(nom: string, public race: string) {
+    super(nom);
+  }
+  crier(): void { console.log("Woof"); }
+}
+
+const c = new Chien("Rex", "Labrador");
+c.crier(); // "Woof"</code></pre>
+
+    <h3>Classes abstraites</h3>
+    <pre><code>abstract class Forme {
+  abstract aire(): number;
+
+  decrire(): string {
+    return `Aire : ${this.aire()}`;
+  }
+}
+
+class Cercle extends Forme {
+  constructor(private rayon: number) { super(); }
+  aire(): number { return Math.PI * this.rayon ** 2; }
+}
+
+// const f = new Forme(); // ❌ Impossible (abstraite)</code></pre>
+
+    <h3>Interfaces & implémentation</h3>
+    <pre><code>interface Serializable {
+  serialiser(): string;
+}
+
+class User implements Serializable {
+  constructor(public nom: string, public age: number) {}
+  serialiser(): string {
+    return JSON.stringify({ nom: this.nom, age: this.age });
+  }
+}</code></pre>
+
+    <h3>Getters & Setters</h3>
+    <pre><code>class Temperature {
+  private _celsius: number = 0;
+
+  get celsius(): number { return this._celsius; }
+  set celsius(v: number) {
+    if (v < -273.15) throw new Error("Température invalide");
+    this._celsius = v;
+  }
+
+  get fahrenheit(): number {
+    return this._celsius * 9 / 5 + 32;
+  }
+}</code></pre>
+
+    <h3>Génériques dans les classes</h3>
+    <pre><code>class Stack&lt;T&gt; {
+  private items: T[] = [];
+  push(item: T): void { this.items.push(item); }
+  pop(): T | undefined { return this.items.pop(); }
+}
+
+const s = new Stack&lt;number&gt;();
+s.push(1);
+// s.push("a"); // ❌ Erreur</code></pre>
+
+    <div class="callout warn">
+      <strong>⚠️ Attention</strong>
+      <code>private</code> en TS est vérifié <strong>à la compilation uniquement</strong>. Pour un vrai privé runtime, utiliser <code>#champ</code>.
+    </div>
+  </section>
+
+  <!-- ========== TYPES VS INTERFACES ========== -->
+  <section id="types-interfaces">
+    <h2>🔷 <code>type</code> vs <code>interface</code></h2>
+
+    <table>
+      <thead>
+        <tr><th>Critère</th><th><code>interface</code></th><th><code>type</code></th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Objets</td><td>✅</td><td>✅</td></tr>
+        <tr><td>Unions</td><td>❌</td><td>✅</td></tr>
+        <tr><td>Tuples</td><td>⚠️</td><td>✅</td></tr>
+        <tr><td>Primitifs</td><td>❌</td><td>✅</td></tr>
+        <tr><td>Déclaration fusionnée</td><td>✅</td><td>❌</td></tr>
+        <tr><td>Mapped types</td><td>❌</td><td>✅</td></tr>
+        <tr><td>Conditionnels</td><td>❌</td><td>✅</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Extension</h3>
+    <pre><code>// interface extends
+interface Animal { nom: string; }
+interface Chien extends Animal { race: string; }
+
+// type intersection
+type Animal = { nom: string };
+type Chien = Animal & { race: string };</code></pre>
+
+    <h3>Déclaration fusionnée (interface uniquement)</h3>
+    <pre><code>interface User { nom: string; }
+interface User { age: number; }
+// Résultat : User = { nom: string; age: number }</code></pre>
+
+    <div class="callout success">
+      <strong>💡 Règle pragmatique</strong>
+      <code>interface</code> par défaut pour les objets, <code>type</code> quand <code>interface</code> ne peut pas faire le job (unions, tuples, mapped types).
+    </div>
+  </section>
+
+  <!-- ========== GENERICS ========== -->
+  <section id="generics">
+    <h2>🔷 Generics</h2>
+
+    <h3>Fonction générique</h3>
+    <pre><code>function identite&lt;T&gt;(valeur: T): T {
+  return valeur;
+}
+
+identite&lt;string&gt;("hello"); // string
+identite(42);              // number (inféré)</code></pre>
+
+    <h3>Contraintes (<code>extends</code>)</h3>
+    <pre><code>function longueur&lt;T extends { length: number }&gt;(x: T): number {
+  return x.length;
+}
+
+longueur("abc");      // ✅
+longueur([1, 2, 3]);  // ✅
+// longueur(42);      // ❌ number n'a pas length</code></pre>
+
+    <h3><code>keyof</code> + génériques</h3>
+    <pre><code>function getProp&lt;T, K extends keyof T&gt;(obj: T, cle: K): T[K] {
+  return obj[cle];
+}
+
+const u = { nom: "Alice", age: 30 };
+getProp(u, "nom"); // string
+// getProp(u, "email"); // ❌</code></pre>
+
+    <h3>Génériques par défaut</h3>
+    <pre><code>interface Boite&lt;T = string&gt; {
+  contenu: T;
+}
+
+const b1: Boite = { contenu: "hello" };        // T = string
+const b2: Boite&lt;number&gt; = { contenu: 42 };</code></pre>
+
+    <h3>Classes génériques</h3>
+    <pre><code>class Stack&lt;T&gt; {
+  private items: T[] = [];
+  push(i: T) { this.items.push(i); }
+  pop(): T | undefined { return this.items.pop(); }
+}</code></pre>
+  </section>
+
+  <!-- ========== DECORATEURS ========== -->
+  <section id="decorateurs">
+    <h2>🔷 Décorateurs</h2>
+
+    <p>Un <strong>décorateur</strong> est une fonction qui modifie une classe, méthode, propriété ou paramètre <strong>à la définition</strong>. Très utilisés dans Angular, NestJS, TypeORM.</p>
+
+    <h3>Activer dans <code>tsconfig.json</code></h3>
+    <pre><code>{
+  "compilerOptions": {
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true
+  }
+}</code></pre>
+
+    <h3>Décorateur de classe</h3>
+    <pre><code>function Component(config: { selector: string }) {
+  return function (constructor: Function) {
+    constructor.prototype.selector = config.selector;
+  };
+}
+
+@Component({ selector: "app-user" })
+class UserComponent {}</code></pre>
+
+    <h3>Décorateur de méthode</h3>
+    <pre><code>function Log(target: any, key: string, descriptor: PropertyDescriptor) {
+  const original = descriptor.value;
+  descriptor.value = function (...args: any[]) {
+    console.log(`Appel de ${key}`, args);
+    return original.apply(this, args);
+  };
+}
+
+class Service {
+  @Log
+  fetch(id: number) { /* ... */ }
+}</code></pre>
+
+    <h3>Exemple NestJS (cas réel)</h3>
+    <pre><code>@Controller("users")
+export class UserController {
+  constructor(private userService: UserService) {}
+
+  @Get(":id")
+  async findOne(@Param("id") id: string) {
+    return this.userService.findOne(id);
+  }
+}</code></pre>
+  </section>
+
+  <!-- ========== ASYNC ========== -->
+  <section id="async">
+    <h2>🔷 Async / Await</h2>
+
+    <h3>Typage du retour</h3>
+    <pre><code>interface User { id: number; nom: string; }
+
+async function fetchUser(id: number): Promise&lt;User&gt; {
+  const res = await fetch(`/api/users/${id}`);
+  return res.json() as Promise&lt;User&gt;;
+}</code></pre>
+
+    <div class="callout info">
+      <strong>💡 À retenir</strong>
+      <code>async</code> enveloppe toujours le retour dans un <code>Promise&lt;T&gt;</code>. Le type est inféré automatiquement.
+    </div>
+
+    <h3><code>Promise.all</code> typé</h3>
+    <pre><code>const [users, posts] = await Promise.all([
+  fetchUsers(),  // Promise&lt;User[]&gt;
+  fetchPosts(),  // Promise&lt;Post[]&gt;
+]);
+// users: User[], posts: Post[]</code></pre>
+
+    <h3>Gestion d'erreurs</h3>
+    <pre><code>async function safeFetch&lt;T&gt;(url: string): Promise&lt;T | null&gt; {
+  try {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return await res.json() as T;
+  } catch (e) {
+    if (e instanceof Error) console.error(e.message);
+    return null;
+  }
+}</code></pre>
+
+    <div class="callout warn">
+      <strong>⚠️ Piège</strong>
+      <code>catch (e)</code> en TS strict : <code>e</code> est <code>unknown</code>. Il faut <em>narrower</em> avant usage.
+    </div>
+
+    <h3>Pièges courants</h3>
+    <pre><code>// ❌ Oublier await
+async function bad() {
+  const user = fetchUser(1); // Promise&lt;User&gt;, pas User
+}
+
+// ❌ async dans forEach
+items.forEach(async (i) => { await traiter(i); }); // ne sera pas attendu
+
+// ✅ for...of
+for (const i of items) {
+  await traiter(i);
+}</code></pre>
+
+    <h3>Combinaisons utiles</h3>
+    <pre><code>// Parallèle (rapide)
+await Promise.all(ids.map(id => fetchUser(id)));
+
+// Premier arrivé
+await Promise.race([fetchA(), fetchB()]);
+
+// Tous, sans échec global
+await Promise.allSettled([fetchA(), fetchB()]);</code></pre>
+  </section>
+
+  <!-- ========== RESSOURCES ========== -->
+  <section id="ressources">
+    <h2>🔷 Ressources recommandées</h2>
+
+    <table>
+      <thead>
+        <tr><th>Type</th><th>Ressource</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>📘 Doc officielle</td><td><a href="https://www.typescriptlang.org/docs/" target="_blank">typescriptlang.org/docs</a></td></tr>
+        <tr><td>🎓 Cours</td><td>Understanding TypeScript (Udemy, Max Schwarzmüller)</td></tr>
+        <tr><td>🧠 Défis</td><td><a href="https://github.com/type-challenges/type-challenges" target="_blank">Type Challenges (GitHub)</a></td></tr>
+        <tr><td>📖 Livre</td><td>Programming TypeScript — Boris Cherny</td></tr>
+        <tr><td>🎥 YouTube</td><td>Matt Pocock, Web Dev Simplified</td></tr>
+        <tr><td>🛠 Playground</td><td><a href="https://www.typescriptlang.org/play" target="_blank">typescriptlang.org/play</a></td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ========== CHECKLIST ========== -->
+  <section id="checklist">
+    <h2>🔷 Checklist finale</h2>
+
+    <ul class="checklist">
+      <li>Installer TypeScript (<code>npm i -g typescript</code>)</li>
+      <li>Compiler un premier fichier <code>.ts</code></li>
+      <li>Maîtriser les types de base et l'inférence</li>
+      <li>Écrire des fonctions typées avec paramètres optionnels</li>
+      <li>Utiliser <code>interface</code> et <code>type</code> à bon escient</li>
+      <li>Créer des classes avec modificateurs d'accès</li>
+      <li>Écrire une classe abstraite et une interface</li>
+      <li>Maîtriser les génériques et contraintes</li>
+      <li>Utiliser les Utility Types (<code>Partial</code>, <code>Pick</code>, <code>Omit</code>…)</li>
+      <li>Configurer <code>tsconfig.json</code> en mode strict</li>
+      <li>Écrire du code async/await typé</li>
+      <li>Comprendre les décorateurs (Angular/NestJS)</li>
+      <li>Réaliser un projet full-stack en TS</li>
+    </ul>
+
+    <div class="callout success">
+      <strong>🎯 Objectif final</strong>
+      Être capable d'écrire une application complète, typée, testée et maintenable en TypeScript.
+    </div>
+  </section>
+
+  <footer>
+    <p>📘 Guide d'apprentissage TypeScript — Généré comme support pédagogique</p>
+    <p>TypeScript est une marque de Microsoft. Ce document est indépendant.</p>
+  </footer>
+
+</main>
+
+<script>
+  // Smooth scroll pour les ancres
+  document.querySelectorAll('aside nav a').forEach(link => {
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      const target = document.querySelector(link.getAttribute('href'));
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+
+  // Highlight du lien actif au scroll
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('aside nav a');
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navLinks.forEach(l => l.style.background = '');
+        const active = document.querySelector(`aside nav a[href="#${entry.target.id}"]`);
+        if (active) active.style.background = 'var(--ts-blue-light)';
+      }
+    });
+  }, { rootMargin: '-30% 0px -60% 0px' });
+
+  sections.forEach(s => observer.observe(s));
+</script>
+
+</body>
+</html>

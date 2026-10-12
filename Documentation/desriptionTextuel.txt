@@ -1,0 +1,273 @@
+	DESCRIPTION TEXTUEL POUR LE LOCATAIRE
+
+
+
+### S'AUTHENTIFIER  ###
+* Acteur : Locataire, Loueur
+
+* Objectif : Permettre aux utilisateurs de se connecter au système 
+
+* Précondition : l'utilisateur accède au page d'authentification
+
+* Postcondition : l'utilisateur est authentifié.
+
+* Scénario nominal:
+- L'utilisateur accède au module s'authentifier
+- le système affiche la page se connecter ou s'inscrire
+- si l'utilisateur n'a pas de compte, le système demande de s'inscrire au l'utilisateur et l'utilisateur envoie sa login et mot de passe au système, et le système enregistre au base de donnée, et renvoie la page se connecter pour continuer.
+- si L'utilisateur a déjà un compte, il accède au page se connecter.
+- le système vérifier l'identifiant et le mot de passe par rapport au données de la base.
+- si la vérification est réussi, le système notifie le client la réussite de connexion 
+- si non, le système est bouclé à la page de s'authentifier jusqu'à la réussite de connexion.
+
+* Scénarios alternatifs: 
+Mot de passe oublié ->
+- l'utilisateur saisie son identifiant(téléphone ou email)
+- le système envoie un code de vérification par email ou téléphonique.
+- le système demande au l'utilisateur de saisir le code de vérification et le nouveau mot de passe.
+- le système enregistre la modification dans la base de données 
+- le système notifie l'utilisateur à la modification réussi et  renvoyer à la page se connecter
+
+
+
+### CONSULTER MATÉRIEL  ###
+* Acteur : Locataire
+
+* Objectif : Permettre au client de parcourir le catalogue des matériels de sonorisation pour identifier les équipements disponibles et leurs caractéristiques.
+
+* Précondition : Le système dispose d’un catalogue de matériels enregistré. Le client accède à l’interface sans obligation d’authentification.
+
+* Postcondition : Le client a consulté les informations du matériel. Le client peut décider de vérifier la disponibilité ou de réserver.
+
+* Scénario nominal:
+- Le client ouvre le catalogue du système.
+-Le système affiche la liste des matériels disponibles avec les informations complètes 
+- Le client peut filtrer ou rechercher par catégorie.
+- Le client sélectionne un matériel pour voir les détails (fiche technique, disponibilité, tarif).
+- Le client peut poursuivre vers Vérifier disponibilité ou Faire réservation.
+
+* Scénarios alternatifs: 
+- Catalogue vide → le système affiche un message indiquant qu’aucun matériel n’est disponible.
+- Erreur de recherche → le système propose des suggestions ou demande une nouvelle saisie.
+- Matériel supprimé ou indisponible → le système signale que l’article n’existe plus.
+
+
+
+
+
+### VERIFIER DISPONIBILITÉ DU MATÉRIEL  ###
+* Acteur : Locataire
+
+* Objectif: Permettre au client de consulter l’état de disponibilité du matériel de sonorisation avant de lancer une réservation.
+
+* Précondition : Le locataire a identifié le matériel souhaité dans le catalogue.
+
+* Postcondition : Le client connaît la disponibilité du matériel pour la période choisie.
+
+* Scénario nominal:
+- Le locataire sélectionne un matériel dans le catalogue.
+- Le locataire indique la période souhaitée (date de début et date de fin).
+- Le système consulte la base des réservations existantes.
+- Le système affiche l’état du matériel :
+	- Disponible: le locataire peut poursuivre vers Faire réservation.
+	- Non disponible: le système propose d’autres dates ou du matériel alternatif.
+
+* Scénarios alternatifs: 
+- Matériel déjà réservé → le système affiche un message d’indisponibilité et propose des alternatives.
+- Erreur de saisie de dates → le système demande une correction (ex. date de fin avant date de début).
+- Catalogue vide ou matériel supprimé → le système signale que l’article n’existe plus.
+
+
+
+
+### FAIRE RÉSERVATION ###
+* Acteur : Locataire
+
+* Précondition : Le matériel souhaité est disponible aux dates choisies et la locataire est authentifié.
+
+* Postcondition : La réservation est enregistrée dans le système avec une statut réservé et le locataire reçoit une confirmation 
+
+* Scénario nominal:
+- Le Locataire confirme son choix et lance la réservation.
+- le Système vérifie la connexion du locataire au système, 
+	- si est connecté on passe à l'étape suivant.
+	- si non, diriger vers la page d'authentification
+- Le système enregistre la réservation et génère un récapitulatif.
+- Le Locataire procède au paiement au service  de paiement.
+- Si le paiement est réussi, Le système confirme la réservation et envoie une notification au Locataire.
+
+* Scénarios alternatifs: 
+- Authentification échouée → le système bloque la réservation et demande une nouvelle tentative.
+- Paiement refusé → la réservation est annulée ou mise en attente.
+
+
+
+
+### MODIFIER OU ANNULER UNE RÉSERVATION ###
+* Acteur : Locataire
+
+* Objectif : Permettre au client de changer les détails d’une réservation existante (dates, matériel) ou de l’annuler complètement.
+
+* Précondition : Le client dispose d’une réservation en cours enregistrée dans le système
+
+* Postcondition : La réservation est mise à jour ou supprimée. Le matériel est marqué comme disponible si annulé. Le client reçoit une confirmation (notification ou email).
+
+* Scénario nominal:
+- Le système affiche la liste des réservations en cours.
+- Le client sélectionne une réservation à modifier ou à annuler.
+	// Cas Modifier :
+	- Le client change les dates ou le matériel ou ajoute autre Materiel
+	- Le système vérifie la disponibilité et met à jour la réservation.
+	- Le système génère un nouveau récapitulatif et, si nécessaire, ajuste le paiement.
+	// Cas Annuler :
+	- Le client confirme l’annulation.
+	- Le système libère le matériel et met à jour l’état de la réservation.
+	- Le système applique la politique de remboursement ou de pénalité.
+- Le système envoie une notification de confirmation au client.
+
+* Scénarios alternatifs: 
+- Modification impossible → matériel indisponible ou dates invalides.
+- Annulation refusée → si la réservation est trop proche de la date prévue
+- Paiement complémentaire → si la modification entraîne un coût supplémentaire.
+- 
+
+
+
+### SUIVRE L'ÉTAT DE LOCATION ###
+* Acteur : Locataire
+
+* Objectif : Permettre au client de consulter en temps réel l’état de sa réservation et du matériel loué.
+
+* Précondition : Le client dispose d’une réservation validée.
+
+* Postcondition : Le client connaît l’état exact de sa réservation.
+
+* Scénario nominal:
+- Le système affiche la liste des réservations en cours et passées.
+- Le client sélectionne une réservation spécifique.
+- Le système affiche l’état actuel du matériel :
+	// En préparation : le matériel est en cours de préparation pour la date prévue.
+	// En cours d’utilisation : le matériel est actuellement loué par le client.
+	// Retourné : le matériel a été restitué et la location est terminée.
+- Le client peut consulter les détails associés (dates, lieu de retrait, conditions de retour).
+
+* Scénarios alternatifs: 
+- Réservation annulée → le système indique que la location n’est plus active.
+- Retard de retour → le système signale un dépassement de délai et peut générer une alerte ou des frais supplémentaires.
+- Matériel en maintenance → le système informe que le matériel est indisponible pour une nouvelle réservation.
+
+
+
+
+	DESCRIPTION TEXTUEL POUR LE LOUEUR
+
+### GÉRER MATÉRIEL ###
+* Acteur : Loueur
+
+* Objectif : Permettre au gestionnaire d’ajouter, modifier, supprimer ou mettre à jour les informations relatives aux matériels de sonorisation afin de maintenir un catalogue fiable et à jour.
+
+* Précondition : Le gestionnaire est authentifié dans le système. Le système dispose d’une base de données des matériels existants.
+
+* Postcondition : Le client connaît l’état exact de sa réservation.
+
+* Scénario nominal:
+- Le gestionnaire s’authentifie pour accéder au back-office.
+- Le système affiche la liste des matériels enregistrés.
+- Le gestionnaire choisit une action :
+	- Ajouter matériel : saisir les informations (nom, type, description, prix, photo, état).
+	- Modifier matériel : mettre à jour les caractéristiques ou l’état (disponible, en maintenance, hors service).
+	- Supprimer matériel : retirer un équipement du catalogue.
+	- Mettre à jour disponibilité : indiquer si le matériel est libre, réservé ou en réparation.
+
+- Le système enregistre les modifications dans la base de données.
+- Le système confirme l’opération et met à jour le catalogue visible par les clients.
+
+* Scénarios alternatifs: 
+- Modification impossible → si le matériel est en cours de réservation.
+- Suppression bloquée → si le matériel est lié à une réservation active.
+
+
+
+### GÉRER RÉSERVATION ###
+* Acteur : Loueur
+
+* Objectif : Permettre au gestionnaire de consulter, valider, refuser, modifier ou annuler les réservations.
+
+* Précondition : Le client dispose d’une réservation validée.
+
+* Postcondition : La réservation est mise à jour (validée, refusée, modifiée ou annulée). Le matériel est marqué comme réservé ou libéré selon la décision. Le client est notifié du statut final.
+
+* Scénario nominal:
+- Le gestionnaire s’authentifie et accède au module de gestion des réservations.
+- Le système affiche la liste des réservations (en attente, validées, annulées, en cours).
+- Le gestionnaire sélectionne une réservation spécifique. 
+- Le gestionnaire choisit une action :
+	// Valider réservation : le système confirme la disponibilité et enregistre la décision.
+	// Refuser réservation : le système notifie le client avec motif du refus.
+	// Modifier réservation : ajuster dates, matériel ou conditions.
+	// Annuler réservation : libérer le matériel et notifier le client.
+- Le système met à jour l’état de la réservation et génère une notification au client.
+- Le système conserve l’historique pour traçabilité et statistiques.
+
+* Scénarios alternatifs: 
+- Annulation forcée → en cas de panne ou maintenance du matériel.
+- Matériel indisponible → le système bloque la validation et propose une alternative
+
+
+### GERER LE RETOUR DU MATERIEL ###
+* Acteur: loueur
+
+* objectif: Permettre au gestionnaire, via le système, de traiter la restitution du matériel : enregistrer le retour, contrôler l’état, mettre à jour les données et clôturer la réservation.
+
+* Précondition : Le matériel a été restitué par le client et la réservation correspondante est active ou en cours de clôture et enregistrée dans le système.
+
+* Postcondition : La restitution est enregistrée. L’état du matériel est mis à jour. La réservation est clôturée 
+
+* Scénario nominal: 
+- Le gestionnaire accède au module « Retour du matériel ».
+- Le système Enregistre restitution (date, heure, identifiant du matériel).
+- Le gestionnaire lance le cas Contrôler l’état du matériel
+- Le système Met à jour état du matériel (disponible, en maintenance, endommagé).
+- Le système Met à jour état de la réservation (clôturée, clôturée avec pénalités, ou transformée en incident).
+- Le système notifie le client du statut final.
+
+
+
+
+### CONTRÔLER L'ÉTAT DU MATÉRIEL ###
+* Acteur : Loueur
+
+* Objectif : Permettre au gestionnaire de vérifier l’état du matériel restitué par le client, comparer avec l’état initial, et déclencher les actions nécessaires (validation, réparation, facturation).
+
+* Précondition : le loueur lance le contrôle de l'état du matériel.
+
+* Postcondition : Le contrôle de l’état du matériel a été effectué.
+
+* Scénario nominal:
+- Le gestionnaire sélectionne la réservation concernée.
+- Le système affiche l’état initial du matériel (avant location).
+- Le gestionnaire saisit l’état actuel du matériel (checklist, photos, observations).
+- Le système compare l’état initial et l’état final.
+- Si le matériel est conforme → le système clôture la réservation et marque le matériel comme disponible.
+- Si un problème est détecté (casse, perte, défaut) → le système : 	- Notifie le client 
+	- Génère un rapport de constat 
+	- Déclenche une action complémentaire (facturation, réparation, retenue sur caution).
+
+* Scénario Alternatifs:
+- Matériel non restitué → le système signale une anomalie et déclenche une procédure de litige.
+- Retard de restitution → le système calcule et applique des frais supplémentaires.
+- Erreur de saisie → le système demande une correction ou une nouvelle saisie.
+
+* Données numériques à comparer: 
+- Disponibilité: dates prévues vs dates réelles.
+- Présence d'accessoire: manquant
+- Quantité d’accessoires : nombre initial vs nombre restitué. 
+- Etat du Matériel: État initial vs État final (bonne, fissure, perdue)
+
+
+
+FACTURE PÉNALITÉ 
+** Retard de restitution → frais calculés par jour ou heure supplémentaire.
+** Matériel endommagé → frais de réparation ou remplacement.
+** Accessoires manquants → facturation au prix unitaire.
+

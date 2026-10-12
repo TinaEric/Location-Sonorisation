@@ -1,0 +1,191 @@
+######  THEME DU STAGE #########
+Conception et développement d’une application web de gestion automatisée des locations de matériel de sonorisation.
+
+######  OBJECTIFS DU STAGE ####
+OBJECTIFS : Automatiser le cycle de location dans le but de supprimer les processus manuels de la réservation jusqu'au retour du matériel de sonorisation, optimiser la gestion des stocks, fiabiliser le suivi client et la facturation.
+COMPÉTENCES : Analyse et Modélisation avec la méthode 2TUP, Développement Full Stack, Utilisation des outils professionnels comme Git et Docker.
+
+######  DESCRIPTIF DÉTAILLÉ ###
+Ce projet de stage consiste à concevoir et développer une application web de gestion de location de matériel de sonorisation en suivant la méthodologie 2TUP. La mission débute par une phase d'analyse des besoins et de modélisation des données à l'aide du langage UML pour structurer une base PostgreSQL. Elle se poursuit par le développement d'une architecture full stack découplée, associant une interface utilisateur dynamique sous React à une API REST robuste développée avec NestJS. L'application est entièrement conteneurisée via Docker, versionnée avec Git, et livrera un code source complet accompagné de sa documentation technique et fonctionnelle.
+
+#####  PLANNING PRÉAVISÉ ######
+Semaine 1-3: Analyse, spécification et Modélisation UML .
+Semaine 4-9:  Architecture et Développement Full-Stack.
+semaine 11-12: Tests  et Déploiement
+
+#### Moyens logiciels  #####
+Technologies et Frameworks: React avec Tailwind CSS pour frontend et  NestJS pour backend.
+Système de Gestion de Base de Données : PostgreSQL
+Environnement de développement : Visual studio Code
+Outil de modélisation : Visual Paradigme
+Outils de Versionnage et Conteneurisation : Git et Docker
+
+
+## ACTEUR: 
+** Emprunteur (Client): 
+- Rôle : formule la demande, utilise le matériel, assure la restitution.
+- Attentes : matériel disponible, en bon état, facile à utiliser, prix raisonnable.
+- Critères de satisfaction : respect des délais, assistance technique, absence de litige.
+
+** Propriétaire (loueur):
+- Rôle : Fournit le matériel (gestion du stock), valide les demandes, prépare et installe le matériel, contrôle le retour.
+- Attentes : centralise les demandes et contrats, Traçabilité des sorties et retours de matériel, Réduction des erreurs humaines (contrats incomplets, oublis), calcul revenu et les dépenses.
+- Critères de satisfaction : matériel non endommagé, respect des délais, traçabilité.
+
+
+## Messages
+** Emprunteur → Système:
+- Demande d’allocation : formulaire numérique (identité, matériel, dates).
+- Validation de contrat : acceptation électronique des conditions (prix, caution, délais).
+- Confirmation de retour : notification de restitution du matériel.
+
+
+** Loueur → Système
+- Accusé de réception : message automatique confirmant la demande.
+- Validation et conditions : envoi des modalités (prix, caution, assurance, délais).
+- Contrat électronique : mise à disposition du document à signer.
+- Contrôle retour : saisie de l’état du matériel après restitution.
+- Instructions techniques : fiches numériques, tutoriels vidéo, consignes de sécurité.
+- Archivage automatique : conservation des données légales et historiques.
+
+
+
+______________________________________________________________
+
+
+## Les actions du locataire durant le processus :
+
+Avant la location : exprime son besoin (type de matériel, dates, lieu), demande un devis, compare les offres.
+
+Lors de la réservation : valide le devis, verse l'acompte, fournit les pièces justificatives (pièce d'identité, justificatif de domicile, attestation d'assurance).
+
+Au retrait : règle le solde, verse la caution, participe à l'état des lieux (check-out), teste le matériel avec le loueur.
+
+Pendant l'utilisation : utilise le matériel conformément à sa destination, assure sa garde et sa sécurité, ne le sous-loue pas.
+
+Au retour : restitue le matériel propre et rangé, participe à l'état des lieux (check-in), signe le PV de retour.
+
+___________________________________________________________
+
+## Les actions du loueur durant le processus :
+
+Avant la location : vérifie la disponibilité du stock, établit le devis, conseille le client sur le matériel adapté.
+
+Lors de la réservation : bloque les dates, encaisse l'acompte, constitue le dossier client, vérifie les justificatifs.
+
+Au retrait : prépare le matériel, réalise l'état des lieux de sortie, teste le matériel devant le client, explique le fonctionnement, encaisse le solde et la caution.
+
+Pendant la location : reste disponible en cas de panne ou de question technique, peut assurer une assistance téléphonique.
+
+Au retour : vérifie l'état du matériel, réalise l'état des lieux de retour, restitue la caution (déduction faite des éventuels dommages), facture les frais annexes (nettoyage, retard, consommables).
+
+___________________________________________________________
+
+Donnes Locataire :
+- Nom
+- Prénom
+- Adresse postale
+- Téléphone
+- Email
+- Photos CIN
+
+Données Loueur: 
+- Nom de l'entreprise
+- Adresse l'entrepôt 
+- Téléphone
+- WhatsApp 
+- Email 
+- Facebook 
+
+Données de catégorie de matériel:
+- libellé: Enceintes, Table mixage, Microphone, instrument, Lumière, Energie, vidéos projeteur, effet
+- Description
+- type: sonorisation, instrument, lumière, écran, effet
+- actif: actif ou inactif
+
+Données Matériel:
+- ID matériel
+- Désignation
+- marque
+- modèle
+- prix de location
+- nombre de stock
+- statut: (actif, inactif)
+- images
+- détail technique
+
+Données Items 
+- Code Catégorie 
+- état :  bon, meuf, Broken,..
+- statut: disponible, indisponible, maintenance
+- date création (Pour afficher les "Nouveautés" sur le site)
+- emplacement
+
+Données Ligne location: 
+- ID Réservation 
+- ID Matériel
+- Quantité réservé
+- Sous total
+- Accessoires inclus
+- État au départ (neuf, bon état, traces d'usure)
+- État au retour (neuf, bon état, traces d'usure)
+
+Données au Location:
+- numéro Location
+- Date et heure de Création
+- Statut (En attente, Confirmée, En cours, Terminée, Annulée)
+- Date et heure de début de location
+- Date et heure de fin de location
+- Date et heure de Retour
+- Lieu d'utilisation (adresse de l'événement)
+- Mode de retrait (retrait par le client, livraison par le loueur)
+- Frais de livraison si livrée par le loueur
+- Remarques 
+
+Données au Mouvement
+- ID affectation
+- date affectation
+- état départ
+- état retour
+
+
+Données au Paiement
+- ID Paiement
+- date paiement
+- mode paiement (Mvola, Espèces)
+- type paiement (Acompte de 30%, solde, caution Restituée )
+- statut paiement ( en attente, validé , échoué, remboursé)
+
+
+
+Données financières
+- Prix de location HT et TTC
+- Taux de TVA applicable
+- Montant de l'acompte (généralement 30 %)
+- Montant du solde à payer au retrait
+- Montant de la caution (empreinte bancaire ou chèque)
+- Frais annexes (livraison, nettoyage, consommables, assurance)
+- Pénalités de retard (par jour ou par heure)
+- Tarif des dommages (grille de facturation en cas de casse ou perte)
+
+
+
+Différente Type de Categorie:
+1. Les sources audio
+- Microphones : Captent la voix ou les instruments (filaires ou sans fil, dynamiques ou à condensateur).
+- Lecteurs et contrôleurs : Instruments, platines DJ, lecteurs multimédias ou ordinateurs pour diffuser la musique enregistrée.
+
+2. Le traitement et le mixage
+- Tables de mixage (consoles) : Permettent de regrouper, doser, égaliser et traiter les différents signaux audio (analogiques ou numériques).
+- Périphériques et processeurs : Égaliseurs, compresseurs et processeurs de diffusion pour affiner le rendu sonore et protéger le système.
+
+3. L'amplification
+- Amplificateurs de puissance : Augmentent le signal audio avant de l'envoyer vers les enceintes passives. (Note : les enceintes actives intègrent déjà leur propre amplificateur).
+
+4. La diffusion
+- Enceintes de sonorisation : Diffusent le son vers le public. On distingue les enceintes actives, passives, en colonne ou les retours de scène.
+- Caissons de basse (subwoofers) : Spécialisés dans la reproduction des fréquences graves et des impacts pour les basses.
+
+5. La câblage et les accessoires
+- Câblage : Câbles XLR, speakon, jack et multipaires indispensables pour relier les différents éléments entre eux.
+- Supports : Pieds d'enceintes, pieds de micro et structures de scène.

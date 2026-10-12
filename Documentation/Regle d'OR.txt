@@ -1,0 +1,31 @@
+Les règles d'or à respecter
+Ne jamais louer un pack sans assigner d'exemplaires précis.
+→ Sinon, vous ne savez pas ce qui est réellement parti.
+
+Vérifier la disponibilité avant de confirmer une location.
+→ Un pack "disponible" en théorie peut ne pas l'être en pratique si les exemplaires sont déjà pris.
+
+Faire tourner les exemplaires.
+→ Ne pas toujours envoyer les mêmes. Répartir l'usure.
+
+Mettre à jour l'état au retour.
+→ Un exemplaire qui revient abîmé doit changer de statut (En maintenance).
+
+Prévoir des exemplaires de secours.
+→ Si un pack contient 2 enceintes, en avoir 1 ou 2 en rab pour les imprévus.
+
+Gérer les packs "partiels".
+→ Si un client veut seulement une partie du pack, on peut créer un pack sur mesure en piochant dans le parc.
+
+Documenter les substitutions.
+→ Si un exemplaire est remplacé par un autre (panne, indisponibilité), le noter dans la location.
+
+
+
+
+
+
+
+Le problème avec la personnalisation est que le client ne sait souvent pas exactement ce qui est techniquement possible ou disponible. Il faut donc éviter qu'il réserve en direct des éléments qui ne sont pas compatibles ou indisponibles. La solution est de transformer votre site ou votre processus de réservation en une plateforme de "wishlist" (liste de souhaits) .
+
+Concrètement, le client sélectionne les éléments qu'il souhaite ou décrit son besoin, mais ne peut pas finaliser la réservation et payer immédiatement. Sa demande est envoyée comme une "demande de devis" que le loueur doit valider manuellement .

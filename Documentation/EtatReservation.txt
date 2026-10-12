@@ -1,0 +1,19 @@
+Demande de réservation
+        ↓
+    EN ATTENTE
+        ↓
+Loueur accepte
+        ↓
+     ACCEPTÉE
+        ↓
+Contrat validé + paiement
+        ↓
+      CONFIRMÉE
+        ↓
+Date de début atteinte
+        ↓
+      EN COURS
+        ↓
+Retour du matériel
+        ↓
+     TERMINÉE
